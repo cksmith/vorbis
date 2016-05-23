@@ -65,7 +65,9 @@ endif()
 
 include_directories(../include)
 include_directories(.)
-include_directories(${OGG_INCLUDE_DIRS})
+if(DEFINED OGG_INCLUDE_DIRS)
+	include_directories(${OGG_INCLUDE_DIRS})
+endif()
 
 if (NOT BUILD_FRAMEWORK)
     add_library(vorbis ${VORBIS_HEADERS} ${VORBIS_SOURCES})
@@ -79,15 +81,29 @@ if (NOT BUILD_FRAMEWORK)
     get_version_info(VORBISFILE_VERSION_INFO "VF_LIB_CURRENT" "VF_LIB_AGE" "VF_LIB_REVISION")
     set_target_properties(vorbisfile PROPERTIES SOVERSION ${VORBISFILE_VERSION_INFO})
 
-    target_link_libraries(vorbis ${OGG_LIBRARIES})
-    target_link_libraries(vorbisenc ${OGG_LIBRARIES})
-    target_link_libraries(vorbisfile ${OGG_LIBRARIES})
+	if(DEFINED OGG_LIBRARIES)
+		target_link_libraries(vorbis ${OGG_LIBRARIES})
+		target_link_libraries(vorbisenc ${OGG_LIBRARIES})
+		target_link_libraries(vorbisfile ${OGG_LIBRARIES})
+	else()
+		target_link_libraries(vorbis libogg::ogg)
+		target_link_libraries(vorbisenc vorbis libogg::ogg)
+		target_link_libraries(vorbisfile vorbis libogg::ogg)
+	endif()
+	
+	set_target_properties(
+		vorbis PROPERTIES
+		PUBLIC_HEADER "${VORBIS_PUBLIC_HEADERS}"
+	}
 
-    install(FILES ${VORBIS_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/vorbis)
-
-    install(TARGETS vorbis     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
-    install(TARGETS vorbisenc  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
-    install(TARGETS vorbisfile RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    install(TARGETS vorbis vorbisenc vorbisfile
+		EXPORT "${target_export_name}"
+		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} 
+		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} 
+		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
+		FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
+		PUBLIC_HEADER DESTINATION "${include_install_dir}/ogg")
+		
 else()
     add_library(vorbis ${VORBIS_PUBLIC_HEADERS} ${VORBIS_HEADERS} ${VORBIS_SOURCES} ${VORBISFILE_SOURCES} ${VORBISENC_SOURCES})
     set_target_properties(vorbis PROPERTIES
