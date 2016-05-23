@@ -58,8 +58,8 @@ endfunction()
 
 message(STATUS "Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
 
-set(config_install_dir "lib/cmake/${PROJECT_NAME}")
-set(include_install_dir "include")
+set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+set(include_install_dir "${CMAKE_INSTALL_INCLUDEDIR}")
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
 set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
@@ -80,9 +80,9 @@ else
 		find_path(OGG_INCLUDE_DIRS NAMES ogg/ogg.h HINTS ${OGG_ROOT}/include PATH_SUFFIXES ogg)
 		find_library(OGG_LIBRARIES NAMES ogg HINTS ${OGG_ROOT}/lib ${OGG_ROOT}/lib64)
 	endif()
+	include(FindPackageHandleStandardArgs)
+	find_package_handle_standard_args(OGG DEFAULT_MSG OGG_INCLUDE_DIRS OGG_LIBRARIES)
 endif()
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(OGG DEFAULT_MSG OGG_INCLUDE_DIRS OGG_LIBRARIES)
 
 add_subdirectory(lib)
 
