@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
-project(vorbis)
 
 include(cmake/HunterGate.cmake)
 HunterGate(
 	URL "https://github.com/ruslo/hunter/archive/v0.20.5.tar.gz"
 	SHA1 "9f5eb722cbd9068f3d21a43b07832f8cc41336a1"
 )
+
+project(vorbis)
 
 # Required modules
 include(GNUInstallDirs)
@@ -70,7 +71,7 @@ set(namespace "${PROJECT_NAME}::")
 if(DEFINED HUNTER_ENABLED AND HUNTER_ENABLED)
 	hunter_add_package(libogg)
 	find_package(libogg CONFIG REQUIRED)
-else
+else()
 	if(NOT OGG_ROOT)
 		find_package(PkgConfig QUIET)
 		pkg_check_modules(PC_OGG QUIET ogg)

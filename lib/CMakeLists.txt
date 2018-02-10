@@ -98,7 +98,7 @@ if (NOT BUILD_FRAMEWORK)
 	set_target_properties(
 		vorbis PROPERTIES
 		PUBLIC_HEADER "${VORBIS_PUBLIC_HEADERS}"
-	}
+    )
 
     install(TARGETS vorbis vorbisenc vorbisfile
 		EXPORT "${target_export_name}"
