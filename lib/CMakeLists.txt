@@ -57,6 +57,10 @@ set(VORBISENC_SOURCES
     vorbisenc.c
 )
 
+if(WIN32)
+    list(APPEND VORBIS_SOURCES vorbisenc.c)
+endif()
+
 if(MSVC)
     list(APPEND VORBIS_SOURCES ../win32/vorbis.def)
     list(APPEND VORBISENC_SOURCES ../win32/vorbisenc.def)
@@ -83,8 +87,8 @@ if (NOT BUILD_FRAMEWORK)
 
 	if(DEFINED OGG_LIBRARIES)
 		target_link_libraries(vorbis ${OGG_LIBRARIES})
-		target_link_libraries(vorbisenc ${OGG_LIBRARIES})
-		target_link_libraries(vorbisfile ${OGG_LIBRARIES})
+		target_link_libraries(vorbisenc ${OGG_LIBRARIES} vorbis)
+		target_link_libraries(vorbisfile ${OGG_LIBRARIES} vorbis)
 	else()
 		target_link_libraries(vorbis libogg::ogg)
 		target_link_libraries(vorbisenc vorbis libogg::ogg)
