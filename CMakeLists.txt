@@ -3,8 +3,8 @@ project(vorbis)
 
 include(cmake/HunterGate.cmake)
 HunterGate(
-	URL "https://github.com/ruslo/hunter/archive/v0.14.23.tar.gz"
-	SHA1 "999F07D004649F5F549953F74F21E46B48D53931"
+	URL "https://github.com/ruslo/hunter/archive/v0.20.5.tar.gz"
+	SHA1 "9f5eb722cbd9068f3d21a43b07832f8cc41336a1"
 )
 
 # Required modules
